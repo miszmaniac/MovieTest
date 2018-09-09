@@ -1,0 +1,71 @@
+<html>
+<input>
+<svg version="1.1" class="center-block" xmlns="http://www.w3.org/2000/svg"
+     width="400" height="300"
+     style="border: 1px solid black;">
+    <g>
+        <image xlink:href="https://mdn.mozillademos.org/files/6457/mdn_logo_only_color.png" height="200" width="200">
+        </image>
+    </g>
+    <g>
+        <g transform="translate(151,104) scale(1,1)">
+
+            <rect x="0" y="0" width="300" height="200"></rect>
+            <foreignObject x="-200" y="-150" width="200" height="150">
+                <video id="video" width="200" height="100" constrols=""
+                       autoplay
+                       style="position: fixed; left: 151px; top: 104px;">
+                    <source src="http://mirrors.standaloneinstaller.com/video-sample/P6090053.mp4"
+                            type="video/mp4">
+                </video>
+            </foreignObject>
+        </g>
+    </g>
+</svg>
+
+<input type="range" min="1" max="100" value="1" class="slider" id="range">
+<button id="play">Play</button>
+</body>
+<script>
+    let video = document.getElementById("video");
+    let range = document.getElementById("range");
+    let playButton = document.getElementById("play");
+    let i = setInterval(function () {
+        if (video.readyState > 0) {
+            range.max = video.duration * 29.97;
+            clearInterval(i);
+        }
+    }, 200);
+    range.oninput = function () {
+        video.currentTime = this.value / 29.97;
+        console.log(this.value)
+    }
+
+    var req = new XMLHttpRequest();
+        req.open('GET', 'http://mirrors.standaloneinstaller.com/video-sample/P6090053.mp4', true);
+        req.responseType = 'blob';
+
+        req.onload = function() {
+            // Onload is triggered even on 404
+            // so we need to check the status code
+            if (this.status === 200) {
+                var videoBlob = req.response;
+                var vid = (window.URL || window.webkitURL || window || {}).createObjectURL(videoBlob); // IE10+
+                // Video is now downloaded
+                // and we can set it as source on the video element
+                video.src = vid;
+                video.load();
+            }
+        }
+        req.onerror = function(error) {
+            console.log(error);
+        }
+
+        req.send();
+
+        playButton.addEventListener('click', function() {
+                        console.log(video.play().then(a => console.log(a)).catch(error => console.error(error)))
+
+        });
+</script>
+</html>
