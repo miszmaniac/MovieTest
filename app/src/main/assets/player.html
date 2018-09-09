@@ -1,5 +1,5 @@
 <html>
-<input>
+<body>
 <svg version="1.1" class="center-block" xmlns="http://www.w3.org/2000/svg"
      width="400" height="300"
      style="border: 1px solid black;">
@@ -39,33 +39,30 @@
     range.oninput = function () {
         video.currentTime = this.value / 29.97;
         console.log(this.value)
-    }
+    };
 
     var req = new XMLHttpRequest();
-        req.open('GET', 'http://mirrors.standaloneinstaller.com/video-sample/P6090053.mp4', true);
-        req.responseType = 'blob';
+    req.open('GET', 'http://mirrors.standaloneinstaller.com/video-sample/P6090053.mp4', true);
+    req.responseType = 'blob';
 
-        req.onload = function() {
-            // Onload is triggered even on 404
-            // so we need to check the status code
-            if (this.status === 200) {
-                var videoBlob = req.response;
-                var vid = (window.URL || window.webkitURL || window || {}).createObjectURL(videoBlob); // IE10+
-                // Video is now downloaded
-                // and we can set it as source on the video element
-                video.src = vid;
-                video.load();
-            }
+    req.onload = function() {
+        // Onload is triggered even on 404
+        // so we need to check the status code
+        if (this.status === 200) {
+            var videoBlob = req.response;
+            video.src = (window.URL || window.webkitURL || window || {}).createObjectURL(videoBlob); // IE10+
+            video.load();
         }
-        req.onerror = function(error) {
-            console.log(error);
-        }
+    };
+    req.onerror = function(error) {
+        console.log(error);
+    };
 
-        req.send();
+    req.send();
 
-        playButton.addEventListener('click', function() {
-                        console.log(video.play().then(a => console.log(a)).catch(error => console.error(error)))
+    playButton.addEventListener('click', function() {
+        console.log(video.play().then(a => console.log(a)).catch(error => console.error(error)))
 
-        });
+    });
 </script>
 </html>
